@@ -1,4 +1,5 @@
 terraform {
+  required_version = ">= 1.11.5"
   required_providers {
     spacelift = {
       source  = "spacelift-io/spacelift"
@@ -6,7 +7,7 @@ terraform {
     }
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 6.0"
     }
   }
 }
@@ -15,12 +16,12 @@ terraform {
 # Update input values according to your needs
 provider "spacelift" {
   api_key_endpoint = "https://my-spacelift.app.spacelift.io"
-  api_key_id       = "your-spacelift-api-key-id"
-  api_key_secret   = "your-spacelift-api-key-secret"
+  api_key_id       = "" # your-spacelift-api-key-id
+  api_key_secret   = "" # your-spacelift-api-key-secret
 }
 
 provider "aws" {
-  region  = "us-east-1"
+  region = "us-east-1"
 }
 
 # Note: the "stack" module has other non-required inputs that can be customized
@@ -28,9 +29,9 @@ provider "aws" {
 module "stack" {
   source = "../../"
 
-  name                 = "example-stack"
+  name                   = "example-stack"
   spacelift_account_name = "my-spacelift"
-  repository_name       = "your-stack-repo"
-  repository_branch     = "main"
-  description          = "This is an example stack."
+  repository_name        = "your-stack-repo"
+  repository_branch      = "main"
+  description            = "This is an example stack."
 }

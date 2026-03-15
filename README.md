@@ -3,14 +3,16 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_spacelift"></a> [spacelift](#requirement\_spacelift) | ~> 0.1.11 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | 1.11.5 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 6.36.0 |
+| <a name="requirement_spacelift"></a> [spacelift](#requirement\_spacelift) | 1.44.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
-| <a name="provider_spacelift"></a> [spacelift](#provider\_spacelift) | ~> 0.1.11 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.36.0 |
+| <a name="provider_spacelift"></a> [spacelift](#provider\_spacelift) | 1.44.0 |
 
 ## Modules
 
@@ -20,13 +22,13 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [aws_iam_role.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
-| [spacelift_aws_role.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/aws_role) | resource |
-| [spacelift_context_attachment.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/context_attachment) | resource |
-| [spacelift_policy_attachment.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/policy_attachment) | resource |
-| [spacelift_run.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/run) | resource |
-| [spacelift_stack.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/stack) | resource |
-| [spacelift_stack_destructor.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/stack_destructor) | resource |
+| [aws_iam_role.this](https://registry.terraform.io/providers/hashicorp/aws/6.36.0/docs/resources/iam_role) | resource |
+| [spacelift_aws_role.this](https://registry.terraform.io/providers/spacelift-io/spacelift/1.44.0/docs/resources/aws_role) | resource |
+| [spacelift_context_attachment.this](https://registry.terraform.io/providers/spacelift-io/spacelift/1.44.0/docs/resources/context_attachment) | resource |
+| [spacelift_policy_attachment.this](https://registry.terraform.io/providers/spacelift-io/spacelift/1.44.0/docs/resources/policy_attachment) | resource |
+| [spacelift_run.this](https://registry.terraform.io/providers/spacelift-io/spacelift/1.44.0/docs/resources/run) | resource |
+| [spacelift_stack.this](https://registry.terraform.io/providers/spacelift-io/spacelift/1.44.0/docs/resources/stack) | resource |
+| [spacelift_stack_destructor.this](https://registry.terraform.io/providers/spacelift-io/spacelift/1.44.0/docs/resources/stack_destructor) | resource |
 
 ## Inputs
 
@@ -51,7 +53,7 @@ No modules.
 | <a name="input_description"></a> [description](#input\_description) | A description to describe your Spacelift stack. | `string` | n/a | yes |
 | <a name="input_enable_local_preview"></a> [enable\_local\_preview](#input\_enable\_local\_preview) | Whether or not to enable the Spacelift CLI 'local preview' feature | `bool` | `false` | no |
 | <a name="input_execution_role_arn"></a> [execution\_role\_arn](#input\_execution\_role\_arn) | Use this variable if you would like to specify a custom role ARN to use for your stack's AWS integration. Note: setup\_aws\_integration should be true & create\_iam\_role false when this variable is used | `string` | `""` | no |
-| <a name="input_execution_role_policy_arns"></a> [execution\_role\_policy\_arns](#input\_execution\_role\_policy\_arns) | A list of ARNs of IAM Policies to apply to the IAM Role that will be used by the Spacelift stack AWS integration. | `list(string)` | <pre>[<br>  "arn:aws:iam::aws:policy/PowerUserAccess"<br>]</pre> | no |
+| <a name="input_execution_role_policy_arns"></a> [execution\_role\_policy\_arns](#input\_execution\_role\_policy\_arns) | A list of ARNs of IAM Policies to apply to the IAM Role that will be used by the Spacelift stack AWS integration. | `list(string)` | <pre>[<br/>  "arn:aws:iam::aws:policy/PowerUserAccess"<br/>]</pre> | no |
 | <a name="input_github_organization"></a> [github\_organization](#input\_github\_organization) | For GitHub Enterprise VCS users, use this variable to specify the name of your GitHub Organization. | `string` | `""` | no |
 | <a name="input_labels"></a> [labels](#input\_labels) | Labels to apply to the stack being created. | `list(string)` | `[]` | no |
 | <a name="input_manage_state"></a> [manage\_state](#input\_manage\_state) | Whether or not you would like Spacelift to manage the state for your stack. | `bool` | `true` | no |
