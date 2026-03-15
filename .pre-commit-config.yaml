@@ -1,0 +1,104 @@
+exclude: '^.*\.(iml|pub|terraform)'
+fail_fast: false
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0  # https://github.com/pre-commit/pre-commit-hooks
+    hooks:
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-shebang-scripts-are-executable
+      - id: check-docstring-first
+      - id: detect-aws-credentials
+      - id: check-shebang-scripts-are-executable
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+        args: [ --markdown-linebreak-ext=md ]
+      # Cross platform
+      - id: check-case-conflict
+      - id: mixed-line-ending
+        args: [ --fix=lf ]
+      # Security
+      - id: detect-aws-credentials
+        args: [ '--allow-missing-credentials' ]
+      - id: detect-private-key
+  - repo: https://github.com/tofuutils/pre-commit-opentofu
+    rev: v2.2.2 # Get the latest from: https://github.com/tofuutils/pre-commit-opentofu/releases
+    hooks:
+#      - id: tofu_validate
+      - id: tofu_tflint
+        args:
+          - --args=--chdir=.
+          - --args=--enable-rule=terraform_documented_variables
+      - id: tofu_fmt
+        name: Tofu Format
+        args:
+          - --args=-diff
+          - --args=-no-color
+      - id: tofu_docs
+        name: Tofu Docs
+        verbose: true
+        args:
+          - --hook-config=--path-to-file=README.md        # Valid UNIX path. I.e. ../TFDOC.md or docs/README.md etc.
+          - --hook-config=--add-to-existing-file=true     # Boolean. true or false
+          - --hook-config=--create-file-if-not-exist=true # Boolean. true or false
+          - --hook-config=--use-standard-markers=true
+      - id: tofu_docs
+        name: Example Tofu Vars File
+        args:
+          - tfvars hcl --output-file terraform.tfvars.model .
+      - id: tofu_providers_lock
+        args:
+          - --args=-platform=linux_amd64
+          - --args=-platform=darwin_amd64
+      - id: tofu_checkov
+        args:
+          - --args=--quiet
+          - --args=--skip-check CKV2_AWS_8,CKV_AWS_61
+
+  - repo: https://github.com/Lucas-C/pre-commit-hooks-nodejs
+    rev: v1.1.2  # https://github.com/Lucas-C/pre-commit-hooks-nodejs
+    hooks:
+      - id: dockerfile_lint
+
+#  - repo: local
+#    hooks:
+#      - id: pre-commit-md-index
+#        name: TF Docs Submodule Index
+#        entry: ./scripts/pre-commit-md-index
+#        language: script
+#        log_file: /tmp/pre-commit-md-index.log
+#        pass_filenames: false
+#        always_run: true
+#        verbose: true
+#
+#  - repo: local
+#    hooks:
+#      - id: no-cross-repo-mod-src
+#        name: no-cross-repo-mod-src
+#        entry: ./scripts/no-cross-repo-mod-src.sh
+#        language: script
+#        files: \.tf$
+#        verbose: false
+#  - repo: local
+#    hooks:
+#      - id: validate-tf-state-key
+#        name: validate-tf-state-key
+#        entry: ./scripts/pre-commit-check-tf-state-path.sh
+#        language: script
+#        files: terraform.tf
+#        always_run: true
+#        verbose: true
+
+
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit.com hooks
+
+    For more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ''
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: [ ]
+  submodules: false
