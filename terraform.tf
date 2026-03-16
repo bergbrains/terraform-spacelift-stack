@@ -20,7 +20,9 @@ provider "aws" {
 }
 
 provider "spacelift" {
-  api_key_endpoint = "https://my-spacelift.app.spacelift.io"
-  api_key_id       = "" # your-spacelift-api-key-id
-  api_key_secret   = "" # your-spacelift-api-key-secret
+  # Credentials can be passed as variables or via environment variables:
+  #   SPACELIFT_API_KEY_ENDPOINT, SPACELIFT_API_KEY_ID, SPACELIFT_API_KEY_SECRET
+  api_key_endpoint = coalesce(var.spacelift_api_key_endpoint, "https://${var.spacelift_account_name}.app.spacelift.io")
+  api_key_id       = var.spacelift_api_key_id
+  api_key_secret   = var.spacelift_api_key_secret
 }
