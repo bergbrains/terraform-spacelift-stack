@@ -5,14 +5,10 @@ terraform {
       source  = "spacelift-io/spacelift"
       version = ">= 1.44.0"
     }
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 6.0"
-    }
   }
 }
 
-# Basic Usage Example
+# Basic Usage Example – Spacelift stack without AWS integration
 # Spacelift provider credentials can be supplied as variables (shown below)
 # or via environment variables: SPACELIFT_API_KEY_ENDPOINT,
 # SPACELIFT_API_KEY_ID, SPACELIFT_API_KEY_SECRET
@@ -24,12 +20,8 @@ provider "spacelift" {
   api_key_secret   = var.api_key_secret
 }
 
-provider "aws" {
-  region = var.aws_region
-}
-
-# Minimal example – uses github.com (default VCS) with managed state and
-# automatic AWS integration via a newly created IAM role.
+# Minimal example – uses github.com (default VCS) with managed state and no
+# AWS integration. For AWS integration see examples/with-aws-integration.
 # See the root variables.tf for the full list of customisable inputs.
 module "stack" {
   source = "../../"
@@ -39,6 +31,9 @@ module "stack" {
   repository_name        = var.repository_name
   repository_branch      = var.repository_branch
   description            = var.description
+
+  # Disable AWS integration for this simple example
+  setup_aws_integration = false
 
   # Optional: pin the Terraform version and workflow tool
   # terraform_version       = "1.6.0"

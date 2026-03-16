@@ -1,3 +1,13 @@
+variable "aws_region" {
+  type        = string
+  description = "AWS region for the AWS provider."
+  default     = "us-east-1"
+}
+
+variable "aws_account_id" {
+  type        = string
+  description = "The 12-digit AWS account ID. Used to pre-construct IAM role ARNs."
+}
 
 variable "name" {
   type        = string
@@ -26,20 +36,20 @@ variable "description" {
   default     = null
 }
 
-variable "api_key_endpoint" {
+variable "spacelift_api_key_endpoint" {
   type        = string
   description = "The Spacelift API endpoint URL. Defaults to https://<spacelift_account_name>.app.spacelift.io."
   default     = null
 }
 
-variable "api_key_id" {
+variable "spacelift_api_key_id" {
   type        = string
   description = "The Spacelift API key ID."
   default     = null
   sensitive   = true
 }
 
-variable "api_key_secret" {
+variable "spacelift_api_key_secret" {
   type        = string
   description = "The Spacelift API key secret."
   default     = null

@@ -1,8 +1,181 @@
 # terraform-spacelift-stack
 
-Forked from https://github.com/spacelift-io/terraform-spacelift-stack.git
+A Terraform module for creating and managing [Spacelift](https://spacelift.io)
+stacks with optional AWS integration.
+
+The module is organised into two layers so each Spacelift stack only needs
+a **single cloud provider**, which is the recommended Spacelift pattern:
+
+| Layer | Location | Provider | Responsibility |
+|-------|----------|----------|----------------|
+| Root module | `/` | `spacelift` | Stack configuration, AWS integration resources, policy/context attachments |
+| AWS submodule | `modules/aws-integration` | `aws` | Read and write IAM roles |
+
+---
+
+## Architecture overview
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Root module  (spacelift provider only)                                 │
+│                                                                         │
+│  ┌─────────────────────────────┐   ┌──────────────────────────────────┐ │
+│  │  spacelift_stack            │   │  spacelift_aws_integration (read) │ │
+│  │  spacelift_stack_destructor │   │  spacelift_aws_integration (write)│ │
+│  │  spacelift_run              │   │  spacelift_aws_integration_       │ │
+│  │  spacelift_policy_attachment│   │    attachment (read / write)      │ │
+│  │  spacelift_context_attachment   └──────────────┬───────────────────┘ │
+│  └─────────────────────────────┘                  │                     │
+│                                                   │ outputs             │
+│  read_assume_role_policy_statement  ◄─────────────┤                     │
+│  write_assume_role_policy_statement ◄─────────────┘                     │
+└──────────────────────────────┬──────────────────────────────────────────┘
+                               │  pass outputs as inputs
+┌──────────────────────────────▼──────────────────────────────────────────┐
+│  modules/aws-integration  (aws provider only)                           │
+│                                                                         │
+│  aws_iam_role.read   (e.g. ReadOnlyAccess)                              │
+│  aws_iam_role.write  (e.g. PowerUserAccess)                             │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Why separate read and write roles?
+
+Spacelift uses the **read** role during `terraform plan` (no mutations
+required) and the **write** role during `terraform apply`. Separating them
+enforces least-privilege:
+
+* The read role carries a restrictive policy (e.g. `ReadOnlyAccess`).
+* The write role carries the permissions needed to deploy your
+  infrastructure (e.g. `PowerUserAccess`).
+
+---
+
+## Quick start
+
+### Spacelift stack only (no AWS)
+
+```hcl
+module "stack" {
+  source = "bergbrains/terraform-spacelift-stack"
+
+  name                   = "my-stack"
+  spacelift_account_name = "my-org"
+  repository_name        = "my-repo"
+  repository_branch      = "main"
+
+  setup_aws_integration = false
+}
+```
+
+### Stack + AWS integration (recommended)
+
+```hcl
+module "stack" {
+  source = "bergbrains/terraform-spacelift-stack"
+
+  name                   = "my-stack"
+  spacelift_account_name = "my-org"
+  repository_name        = "my-repo"
+  repository_branch      = "main"
+
+  setup_aws_integration = true
+  create_iam_role       = true
+  aws_account_id        = "123456789012"
+}
+
+module "aws_roles" {
+  source = "bergbrains/terraform-spacelift-stack//modules/aws-integration"
+
+  role_name_prefix = "my-org-my-stack"
+  aws_region       = "us-east-1"
+
+  # Wire trust-policy statements from the stack module
+  read_assume_role_policy_statement  = module.stack.read_assume_role_policy_statement
+  write_assume_role_policy_statement = module.stack.write_assume_role_policy_statement
+}
+```
+
+See [`examples/with-aws-integration`](examples/with-aws-integration/) for a
+complete, runnable configuration.
+
+### Bring your own roles
+
+If you already have IAM roles, skip the `modules/aws-integration` call and
+pass the ARNs directly:
+
+```hcl
+module "stack" {
+  source = "bergbrains/terraform-spacelift-stack"
+
+  name                   = "my-stack"
+  spacelift_account_name = "my-org"
+  repository_name        = "my-repo"
+  repository_branch      = "main"
+
+  setup_aws_integration    = true
+  create_iam_role          = false
+  read_execution_role_arn  = "arn:aws:iam::123456789012:role/my-read-role"
+  write_execution_role_arn = "arn:aws:iam::123456789012:role/my-write-role"
+}
+```
+
+---
+
+## Applying in the correct order
+
+Spacelift tests role assumption when an integration attachment is created.
+When using Spacelift-managed roles (the default), the IAM roles must exist
+before the attachment is attempted.
+
+**When both modules are declared in the same Terraform configuration**
+(the recommended approach shown above), Terraform resolves the dependency
+automatically through the output/input chain — simply run `terraform apply`.
+
+**When applying separately:**
+
+1. Apply `modules/aws-integration` first to create the IAM roles.
+2. Apply the root module; the integration attachments will now succeed.
+
+---
+
+## Provider configuration
+
+The root module only requires the Spacelift provider. Configure it via
+variables or the standard environment variables:
+
+```bash
+export SPACELIFT_API_KEY_ENDPOINT="https://my-org.app.spacelift.io"
+export SPACELIFT_API_KEY_ID="..."
+export SPACELIFT_API_KEY_SECRET="..."
+```
+
+```hcl
+provider "spacelift" {}   # reads env vars automatically
+```
+
+The `modules/aws-integration` submodule only requires the AWS provider:
+
+```bash
+export AWS_REGION="us-east-1"
+# credentials via env vars, shared credentials file, or instance profile
+```
+
+---
+
+## Examples
+
+| Example | Description |
+|---------|-------------|
+| [`examples/simple-usage`](examples/simple-usage/) | Minimal Spacelift stack, no AWS integration |
+| [`examples/with-aws-integration`](examples/with-aws-integration/) | Full stack with read/write IAM roles |
+
+---
 
 <!-- BEGIN_TF_DOCS -->
+
 ## Requirements
 
 | Name | Version |

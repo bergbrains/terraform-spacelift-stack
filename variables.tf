@@ -161,60 +161,45 @@ variable "import_state_file" {
 # AWS Integration
 # ---------------------------------------------------------------------------
 
-variable "aws_region" {
+variable "aws_account_id" {
   type        = string
-  description = "The AWS region to use for the AWS provider."
-  default     = "us-east-1"
-}
-
-
-variable "execution_role_policy_arns" {
-  type        = list(string)
-  description = "A list of ARNs of IAM Policies to apply to the IAM Role used by the Spacelift stack AWS integration."
-  default = [
-    "arn:aws:iam::aws:policy/PowerUserAccess"
-  ]
+  description = "The 12-digit AWS account ID. Required when `setup_aws_integration = true` and `create_iam_role = true`. Used to construct the IAM role ARNs ahead of time so the Spacelift integration can be created before the roles exist."
+  default     = null
 }
 
 variable "setup_aws_integration" {
   type        = bool
-  description = "Whether or not to setup the AWS integration for the Spacelift stack being created."
+  description = "Whether to create Spacelift AWS integrations (read and write) for the stack. When true, separate integrations are created for plan (read) and apply (write) operations."
   default     = true
 }
 
 variable "create_iam_role" {
   type        = bool
-  description = "Whether or not to create an IAM role for the stack's AWS Integration. If false, `execution_role_arn` must be provided."
+  description = "Whether Spacelift-managed IAM roles should be expected for this stack. When true, the role ARNs are constructed from `aws_account_id` and the stack name. The actual roles must be created via the `modules/aws-integration` submodule. When false, `read_execution_role_arn` and `write_execution_role_arn` must be provided."
   default     = true
 }
 
-variable "execution_role_arn" {
+variable "read_execution_role_arn" {
   type        = string
-  description = "A custom IAM role ARN to use for the stack's AWS integration. Used when `create_iam_role` is false and `setup_aws_integration` is true."
+  description = "ARN of an existing IAM role to use for read (plan) operations. Required when `create_iam_role = false` and `setup_aws_integration = true`."
   default     = null
 }
 
-variable "aws_integration_read" {
-  type        = bool
-  description = "Indicates whether the AWS integration attachment is used for read operations."
-  default     = true
-}
-
-variable "aws_integration_write" {
-  type        = bool
-  description = "Indicates whether the AWS integration attachment is used for write operations."
-  default     = true
+variable "write_execution_role_arn" {
+  type        = string
+  description = "ARN of an existing IAM role to use for write (apply) operations. Required when `create_iam_role = false` and `setup_aws_integration = true`."
+  default     = null
 }
 
 variable "aws_integration_duration_seconds" {
   type        = number
-  description = "AWS IAM role session duration in seconds for the Spacelift AWS integration."
+  description = "AWS IAM role session duration in seconds for the Spacelift AWS integrations."
   default     = null
 }
 
 variable "aws_integration_external_id" {
   type        = string
-  description = "Custom external ID for the Spacelift AWS integration. Only works with private workers."
+  description = "Custom external ID for the Spacelift AWS integrations. Only works with private workers."
   default     = null
 }
 
@@ -226,7 +211,7 @@ variable "aws_integration_generate_credentials_in_worker" {
 
 variable "aws_integration_region" {
   type        = string
-  description = "AWS region to use for selecting a regional AWS STS endpoint in the Spacelift AWS integration."
+  description = "AWS region to use for selecting a regional AWS STS endpoint in the Spacelift AWS integrations."
   default     = null
 }
 
