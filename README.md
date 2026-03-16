@@ -23,12 +23,15 @@ No modules.
 | Name | Type |
 |------|------|
 | [aws_iam_role.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
-| [spacelift_aws_role.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/aws_role) | resource |
+| [spacelift_aws_integration.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/aws_integration) | resource |
+| [spacelift_aws_integration_attachment.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/aws_integration_attachment) | resource |
 | [spacelift_context_attachment.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/context_attachment) | resource |
 | [spacelift_policy_attachment.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/policy_attachment) | resource |
 | [spacelift_run.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/run) | resource |
 | [spacelift_stack.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/stack) | resource |
 | [spacelift_stack_destructor.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/stack_destructor) | resource |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [spacelift_aws_integration_attachment_external_id.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/data-sources/aws_integration_attachment_external_id) | data source |
 
 ## Inputs
 
@@ -55,7 +58,9 @@ No modules.
 | <a name="input_aws_integration_duration_seconds"></a> [aws\_integration\_duration\_seconds](#input\_aws\_integration\_duration\_seconds) | AWS IAM role session duration in seconds for the Spacelift AWS integration. | `number` | `null` | no |
 | <a name="input_aws_integration_external_id"></a> [aws\_integration\_external\_id](#input\_aws\_integration\_external\_id) | Custom external ID for the Spacelift AWS integration. Only works with private workers. | `string` | `null` | no |
 | <a name="input_aws_integration_generate_credentials_in_worker"></a> [aws\_integration\_generate\_credentials\_in\_worker](#input\_aws\_integration\_generate\_credentials\_in\_worker) | Generate AWS credentials in the private worker instead of Spacelift. Requires a private worker pool. | `bool` | `false` | no |
+| <a name="input_aws_integration_read"></a> [aws\_integration\_read](#input\_aws\_integration\_read) | Indicates whether the AWS integration attachment is used for read operations. | `bool` | `true` | no |
 | <a name="input_aws_integration_region"></a> [aws\_integration\_region](#input\_aws\_integration\_region) | AWS region to use for selecting a regional AWS STS endpoint in the Spacelift AWS integration. | `string` | `null` | no |
+| <a name="input_aws_integration_write"></a> [aws\_integration\_write](#input\_aws\_integration\_write) | Indicates whether the AWS integration attachment is used for write operations. | `bool` | `true` | no |
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | The AWS region to use for the AWS provider. | `string` | `"us-east-1"` | no |
 | <a name="input_azure_devops"></a> [azure\_devops](#input\_azure\_devops) | Azure DevOps VCS settings. Provide to use Azure DevOps as the VCS for this stack. | <pre>object({<br/>  project = string<br/>  id      = optional(string)<br/>})</pre> | `null` | no |
 | <a name="input_before_apply"></a> [before\_apply](#input\_before\_apply) | List of before-apply scripts. | `list(string)` | `[]` | no |

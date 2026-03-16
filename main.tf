@@ -161,6 +161,7 @@ resource "spacelift_stack" "this" {
 resource "spacelift_stack_destructor" "this" {
   depends_on = [
     spacelift_stack.this,
+    spacelift_aws_integration_attachment.this,
     spacelift_context_attachment.this,
     spacelift_policy_attachment.this
   ]
@@ -172,43 +173,67 @@ resource "spacelift_run" "this" {
   stack_id = spacelift_stack.this.id
 }
 
+// Retrieve the current AWS account ID to construct the IAM role ARN ahead of
+// time (avoids a circular dependency between the role and the integration).
+// Only needed when we are creating the IAM role and the Spacelift integration.
+data "aws_caller_identity" "current" {
+  count = var.create_iam_role && var.setup_aws_integration ? 1 : 0
+}
+
+// Account-level AWS integration (replaces the deprecated spacelift_aws_role).
+// This integration can be reused across multiple stacks via attachments.
+//
+// NOTE: The role_arn is constructed from the caller's account ID rather than
+// referencing aws_iam_role.this directly. This is intentional: the integration
+// must exist first so that `spacelift_aws_integration_attachment_external_id`
+// can generate the correct trust-policy external ID used by the IAM role.
+// Role assumption is only tested at attachment time, by which point the IAM
+// role has already been created (see `depends_on` on the attachment resource).
+resource "spacelift_aws_integration" "this" {
+  count                          = var.setup_aws_integration ? 1 : 0
+  name                           = "${var.spacelift_account_name}-${var.name}"
+  role_arn                       = var.create_iam_role ? "arn:aws:iam::${data.aws_caller_identity.current[0].account_id}:role/${var.spacelift_account_name}-${var.name}" : var.execution_role_arn
+  duration_seconds               = var.aws_integration_duration_seconds
+  external_id                    = var.aws_integration_external_id
+  generate_credentials_in_worker = var.aws_integration_generate_credentials_in_worker
+  region                         = var.aws_integration_region
+}
+
+// Fetch the Spacelift-generated trust-policy statement for this
+// integration+stack pair so the IAM role's trust relationship is correct.
+// Also exposed via the `aws_assume_role_policy_statement` output for BYO-role
+// scenarios where create_iam_role = false.
+data "spacelift_aws_integration_attachment_external_id" "this" {
+  count          = var.setup_aws_integration ? 1 : 0
+  integration_id = spacelift_aws_integration.this[0].id
+  stack_id       = spacelift_stack.this.id
+  read           = var.aws_integration_read
+  write          = var.aws_integration_write
+}
+
 // IAM Role to allow stacks to deploy resources on AWS
 resource "aws_iam_role" "this" {
   count               = var.create_iam_role ? 1 : 0
   name                = "${var.spacelift_account_name}-${var.name}"
   managed_policy_arns = var.execution_role_policy_arns
   assume_role_policy = jsonencode({
-    "Version" : "2012-10-17",
-    "Statement" : [
-      {
-        "Action" : "sts:AssumeRole",
-        "Condition" : {
-          "StringEquals" : {
-            "sts:ExternalId" : "${var.spacelift_account_name}@${var.name}"
-          }
-        },
-        "Effect" : "Allow",
-        "Principal" : {
-          "AWS" : var.spacelift_aws_account_id
-        }
-      }
+    Version = "2012-10-17"
+    Statement = [
+      jsondecode(data.spacelift_aws_integration_attachment_external_id.this[0].assume_role_policy_statement)
     ]
   })
 }
 
-// Stack Role Attachment
-# Sets up the AWS Integration on the stack
-resource "spacelift_aws_role" "this" {
-  count = var.setup_aws_integration ? 1 : 0
-  depends_on = [
-    spacelift_stack.this
-  ]
-  stack_id                       = spacelift_stack.this.id
-  role_arn                       = var.create_iam_role ? aws_iam_role.this[0].arn : var.execution_role_arn
-  duration_seconds               = var.aws_integration_duration_seconds
-  external_id                    = var.aws_integration_external_id
-  generate_credentials_in_worker = var.aws_integration_generate_credentials_in_worker
-  region                         = var.aws_integration_region
+// Attaches the AWS integration to the Spacelift stack
+resource "spacelift_aws_integration_attachment" "this" {
+  count          = var.setup_aws_integration ? 1 : 0
+  integration_id = spacelift_aws_integration.this[0].id
+  stack_id       = spacelift_stack.this.id
+  read           = var.aws_integration_read
+  write          = var.aws_integration_write
+
+  # The role must exist before attaching since Spacelift tests role assumption
+  depends_on = [aws_iam_role.this]
 }
 
 // Stack Policy Attachments
