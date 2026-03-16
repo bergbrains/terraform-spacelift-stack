@@ -3,9 +3,9 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | 1.11.5 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 6.36.0 |
-| <a name="requirement_spacelift"></a> [spacelift](#requirement\_spacelift) | 1.44.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.11.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.0.0 |
+| <a name="requirement_spacelift"></a> [spacelift](#requirement\_spacelift) | >= 1.44.0 |
 
 ## Providers
 
@@ -22,13 +22,13 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [aws_iam_role.this](https://registry.terraform.io/providers/hashicorp/aws/6.36.0/docs/resources/iam_role) | resource |
-| [spacelift_aws_role.this](https://registry.terraform.io/providers/spacelift-io/spacelift/1.44.0/docs/resources/aws_role) | resource |
-| [spacelift_context_attachment.this](https://registry.terraform.io/providers/spacelift-io/spacelift/1.44.0/docs/resources/context_attachment) | resource |
-| [spacelift_policy_attachment.this](https://registry.terraform.io/providers/spacelift-io/spacelift/1.44.0/docs/resources/policy_attachment) | resource |
-| [spacelift_run.this](https://registry.terraform.io/providers/spacelift-io/spacelift/1.44.0/docs/resources/run) | resource |
-| [spacelift_stack.this](https://registry.terraform.io/providers/spacelift-io/spacelift/1.44.0/docs/resources/stack) | resource |
-| [spacelift_stack_destructor.this](https://registry.terraform.io/providers/spacelift-io/spacelift/1.44.0/docs/resources/stack_destructor) | resource |
+| [aws_iam_role.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [spacelift_aws_role.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/aws_role) | resource |
+| [spacelift_context_attachment.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/context_attachment) | resource |
+| [spacelift_policy_attachment.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/policy_attachment) | resource |
+| [spacelift_run.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/run) | resource |
+| [spacelift_stack.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/stack) | resource |
+| [spacelift_stack_destructor.this](https://registry.terraform.io/providers/spacelift-io/spacelift/latest/docs/resources/stack_destructor) | resource |
 
 ## Inputs
 
