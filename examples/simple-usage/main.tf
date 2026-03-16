@@ -28,17 +28,44 @@ provider "aws" {
   region = var.aws_region
 }
 
+variable "name" {
+  type        = string
+  description = "The name of the Spacelift stack to create."
+}
+
+variable "spacelift_account_name" {
+  type        = string
+  description = "The name of the Spacelift account (e.g. the NAME in https://NAME.app.spacelift.io)."
+}
+
+variable "repository_name" {
+  type        = string
+  description = "The name of the Git repository for the stack."
+}
+
+variable "repository_branch" {
+  type        = string
+  description = "The Git branch to track."
+  default     = "main"
+}
+
+variable "description" {
+  type        = string
+  description = "A free-form description of the Spacelift stack."
+  default     = null
+}
+
 # Minimal example – uses github.com (default VCS) with managed state and
 # automatic AWS integration via a newly created IAM role.
 # See the root variables.tf for the full list of customisable inputs.
 module "stack" {
   source = "../../"
 
-  name                   = "example-stack"
-  spacelift_account_name = "my-spacelift"
-  repository_name        = "your-stack-repo"
-  repository_branch      = "main"
-  description            = "This is an example stack."
+  name                   = var.name
+  spacelift_account_name = var.spacelift_account_name
+  repository_name        = var.repository_name
+  repository_branch      = var.repository_branch
+  description            = var.description
 
   # Optional: pin the Terraform version and workflow tool
   # terraform_version       = "1.6.0"
