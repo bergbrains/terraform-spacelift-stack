@@ -199,6 +199,18 @@ variable "execution_role_arn" {
   default     = null
 }
 
+variable "aws_integration_read" {
+  type        = bool
+  description = "Indicates whether the AWS integration attachment is used for read operations."
+  default     = true
+}
+
+variable "aws_integration_write" {
+  type        = bool
+  description = "Indicates whether the AWS integration attachment is used for write operations."
+  default     = true
+}
+
 variable "aws_integration_duration_seconds" {
   type        = number
   description = "AWS IAM role session duration in seconds for the Spacelift AWS integration."
