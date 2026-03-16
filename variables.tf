@@ -167,11 +167,6 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-variable "spacelift_aws_account_id" {
-  type        = string
-  description = "The ID of Spacelift's AWS account used in the IAM assume-role trust policy."
-  default     = "324880187172"
-}
 
 variable "execution_role_policy_arns" {
   type        = list(string)
@@ -423,8 +418,8 @@ variable "cloudformation" {
 
 variable "kubernetes" {
   type = object({
-    namespace              = optional(string)
-    kubectl_version        = optional(string)
+    namespace                = optional(string)
+    kubectl_version          = optional(string)
     kubernetes_workflow_tool = optional(string)
   })
   description = "Kubernetes-specific configuration. Presence means this stack is a Kubernetes stack."
