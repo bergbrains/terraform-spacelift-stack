@@ -2,7 +2,7 @@
 
 aws_region             = "us-east-2"
 name                   = "example-stack"
-spacelift_account_name = "bergbrains"
-repository_name        = "terraform-dns-bergbrains"
+spacelift_account_name = "cloud-admin"
+repository_name        = "my-github-repo"
 repository_branch      = "master"
 description            = "This is an example stack."
