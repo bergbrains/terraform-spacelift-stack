@@ -44,6 +44,7 @@ No modules.
 | <a name="input_attachment_policy_ids"></a> [attachment\_policy\_ids](#input\_attachment\_policy\_ids) | A list of policy ids to attach to the stack being created. Optional, but powerful feature of Spacelift! | `list(string)` | `[]` | no |
 | <a name="input_autodeploy"></a> [autodeploy](#input\_autodeploy) | Whether or not the Spacelift stack created should autodeploy resources without approval. | `bool` | `false` | no |
 | <a name="input_autoretry"></a> [autoretry](#input\_autoretry) | Indicates whether obsolete proposed changes should automatically be retried. | `bool` | `false` | no |
+| <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | The AWS region to deploy to | `string` | `"us-east-2"` | no |
 | <a name="input_before_apply"></a> [before\_apply](#input\_before\_apply) | List of before-apply scripts. | `list(string)` | `[]` | no |
 | <a name="input_before_destroy"></a> [before\_destroy](#input\_before\_destroy) | List of before-destroy scripts. | `list(string)` | `[]` | no |
 | <a name="input_before_init"></a> [before\_init](#input\_before\_init) | List of before-init scripts. | `list(string)` | `[]` | no |
