@@ -192,3 +192,8 @@ variable "github_organization" {
   description = "For GitHub Enterprise VCS users, use this variable to specify the name of your GitHub Organization."
   default     = ""
 }
+variable "aws_region" {
+  description = "The AWS region to deploy to"
+  type        = string
+  default     = "us-east-2"
+}
