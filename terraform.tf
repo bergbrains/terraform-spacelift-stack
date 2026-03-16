@@ -1,14 +1,14 @@
 terraform {
-  required_version = ">= 1.3.0"
+  required_version = "1.11.5"
 
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 6.0"
+      version = "6.36.0"
     }
     spacelift = {
       source  = "spacelift-io/spacelift"
-      version = "~> 1.0"
+      version = "1.44.0"
     }
   }
 }
