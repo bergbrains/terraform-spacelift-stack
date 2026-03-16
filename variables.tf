@@ -165,6 +165,11 @@ variable "aws_account_id" {
   type        = string
   description = "The 12-digit AWS account ID. Required when `setup_aws_integration = true` and `create_iam_role = true`. Used to construct the IAM role ARNs ahead of time so the Spacelift integration can be created before the roles exist."
   default     = null
+
+  validation {
+    condition     = var.aws_account_id == null || can(regex("^[0-9]{12}$", var.aws_account_id))
+    error_message = "aws_account_id must be a 12-digit AWS account ID."
+  }
 }
 
 variable "setup_aws_integration" {

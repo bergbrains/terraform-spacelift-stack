@@ -191,6 +191,17 @@ resource "spacelift_aws_integration" "read" {
   external_id                    = var.aws_integration_external_id
   generate_credentials_in_worker = var.aws_integration_generate_credentials_in_worker
   region                         = var.aws_integration_region
+
+  lifecycle {
+    precondition {
+      condition     = !var.create_iam_role || var.aws_account_id != null
+      error_message = "aws_account_id must be set when setup_aws_integration = true and create_iam_role = true."
+    }
+    precondition {
+      condition     = var.create_iam_role || var.read_execution_role_arn != null
+      error_message = "read_execution_role_arn must be set when setup_aws_integration = true and create_iam_role = false."
+    }
+  }
 }
 
 // Fetch the Spacelift-generated trust-policy statement for the read integration
@@ -229,6 +240,17 @@ resource "spacelift_aws_integration" "write" {
   external_id                    = var.aws_integration_external_id
   generate_credentials_in_worker = var.aws_integration_generate_credentials_in_worker
   region                         = var.aws_integration_region
+
+  lifecycle {
+    precondition {
+      condition     = !var.create_iam_role || var.aws_account_id != null
+      error_message = "aws_account_id must be set when setup_aws_integration = true and create_iam_role = true."
+    }
+    precondition {
+      condition     = var.create_iam_role || var.write_execution_role_arn != null
+      error_message = "write_execution_role_arn must be set when setup_aws_integration = true and create_iam_role = false."
+    }
+  }
 }
 
 // Fetch the Spacelift-generated trust-policy statement for the write integration.
