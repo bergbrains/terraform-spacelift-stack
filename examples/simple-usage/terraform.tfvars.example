@@ -1,8 +1,8 @@
 # Copy this file to terraform.tfvars and fill in your own values before running.
 
-aws_region             = "us-east-1"
+aws_region             = "us-east-2"
 name                   = "example-stack"
-spacelift_account_name = "my-spacelift"
-repository_name        = "your-stack-repo"
-repository_branch      = "main"
+spacelift_account_name = "bergbrains"
+repository_name        = "terraform-dns-bergbrains"
+repository_branch      = "master"
 description            = "This is an example stack."

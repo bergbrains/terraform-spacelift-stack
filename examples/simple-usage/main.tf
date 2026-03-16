@@ -16,43 +16,16 @@ terraform {
 # Spacelift provider credentials can be supplied as variables (shown below)
 # or via environment variables: SPACELIFT_API_KEY_ENDPOINT,
 # SPACELIFT_API_KEY_ID, SPACELIFT_API_KEY_SECRET
-provider "spacelift" {}
+provider "spacelift" {
+  # Credentials can be passed as variables or via environment variables:
+  #   SPACELIFT_API_KEY_ENDPOINT, SPACELIFT_API_KEY_ID, SPACELIFT_API_KEY_SECRET
+  api_key_endpoint = coalesce(var.api_key_endpoint, "https://${var.spacelift_account_name}.app.spacelift.io")
+  api_key_id       = var.api_key_id
+  api_key_secret   = var.api_key_secret
+}
 
 provider "aws" {
   region = var.aws_region
-}
-
-variable "aws_region" {
-  type        = string
-  description = "The AWS region to use."
-  default     = "us-east-1"
-}
-
-variable "name" {
-  type        = string
-  description = "The name of the Spacelift stack to create."
-}
-
-variable "spacelift_account_name" {
-  type        = string
-  description = "The name of the Spacelift account (e.g. the NAME in https://NAME.app.spacelift.io)."
-}
-
-variable "repository_name" {
-  type        = string
-  description = "The name of the Git repository for the stack."
-}
-
-variable "repository_branch" {
-  type        = string
-  description = "The Git branch to track."
-  default     = "main"
-}
-
-variable "description" {
-  type        = string
-  description = "A free-form description of the Spacelift stack."
-  default     = null
 }
 
 # Minimal example – uses github.com (default VCS) with managed state and
