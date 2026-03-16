@@ -7,13 +7,11 @@
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.11.5 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 6.0 |
-| <a name="requirement_spacelift"></a> [spacelift](#requirement\_spacelift) | ~> 0.1.11 |
+| <a name="requirement_spacelift"></a> [spacelift](#requirement\_spacelift) | >= 1.44.0 |
 
 ## Providers
 
-| Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 6.0 |
+No providers.
 
 ## Modules
 

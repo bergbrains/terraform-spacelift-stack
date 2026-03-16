@@ -3,7 +3,7 @@ terraform {
   required_providers {
     spacelift = {
       source  = "spacelift-io/spacelift"
-      version = "~> 0.1.11"
+      version = ">= 1.44.0"
     }
     aws = {
       source  = "hashicorp/aws"
@@ -18,14 +18,14 @@ terraform {
 # SPACELIFT_API_KEY_ID, SPACELIFT_API_KEY_SECRET
 provider "spacelift" {}
 
+provider "aws" {
+  region = var.aws_region
+}
+
 variable "aws_region" {
   type        = string
   description = "The AWS region to use."
   default     = "us-east-1"
-}
-
-provider "aws" {
-  region = var.aws_region
 }
 
 # Minimal example – uses github.com (default VCS) with managed state and
