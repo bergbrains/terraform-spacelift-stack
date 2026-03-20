@@ -51,6 +51,18 @@ variable "write_role_policy_arns" {
   default     = ["arn:aws:iam::aws:policy/PowerUserAccess"]
 }
 
+variable "read_additional_external_ids" {
+  type        = list(string)
+  description = "Additional external IDs to include alongside the Spacelift-generated ID in the read role's STS trust policy condition. Useful when multiple Spacelift stacks or external principals also need to assume this role."
+  default     = []
+}
+
+variable "write_additional_external_ids" {
+  type        = list(string)
+  description = "Additional external IDs to include alongside the Spacelift-generated ID in the write role's STS trust policy condition. Useful when multiple Spacelift stacks or external principals also need to assume this role."
+  default     = []
+}
+
 variable "tags" {
   type        = map(string)
   description = "Additional tags to apply to the IAM roles."

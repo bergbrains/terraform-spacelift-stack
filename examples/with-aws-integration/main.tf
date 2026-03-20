@@ -45,6 +45,11 @@ module "aws_roles" {
   # read_role_policy_arns  = ["arn:aws:iam::aws:policy/ReadOnlyAccess"]
   # write_role_policy_arns = ["arn:aws:iam::aws:policy/PowerUserAccess"]
 
+  # Optional: additional external IDs to include in each role's trust policy
+  # (useful when multiple stacks or external principals share the same role)
+  # read_additional_external_ids  = []
+  # write_additional_external_ids = []
+
   tags = {
     StackName = var.name
     ManagedBy = "terraform"
